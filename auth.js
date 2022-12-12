@@ -4,6 +4,7 @@ const {google} = require('googleapis');
 
 const secret = require('./client-secret');
 
+// const URL = 'http://localhost:8080'
 const URL = 'https://marina-management-api.wl.r.appspot.com'
 const CLIENT_ID = secret.web.client_id
 const CLIENT_SECRET = secret.web.client_secret
@@ -29,7 +30,8 @@ const authorizationUrl = oauth2Client.generateAuthUrl({
 
 /**
  * Get the value of sub from the Bearer Token.
- * @param {string} authorization The authorization header containing the Bearer Token.
+ * @param {string} authorization The authorization header containing the Bearer Token,
+ *  which should be of the form: "Bearer <JWT>"
  * @returns {string} The value of sub from the Bearer Token's JWT.
  */
 async function getSub(authorization) {
@@ -50,8 +52,8 @@ async function getSub(authorization) {
 }
 
 /**
- * Verify the Bearer token and return the JWT's sub value.
- * @param {string} token The JWT's id token.
+ * Verify the JWT and return the JWT's sub value.
+ * @param {string} token The JWT.
  * @returns {string} The JWT's sub value.
  */
 async function verify(token) {

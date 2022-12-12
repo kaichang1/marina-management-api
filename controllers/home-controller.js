@@ -13,11 +13,13 @@ const oauth2Client = auth.oauth2Client;
 
 router.use(bodyParser.json());
 
+router.use(express.static('public'));
+
 /**
  * Get homepage.
  */
-router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/welcome.html'));
+ router.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/index.html'));
 });
 
 /**
@@ -45,39 +47,25 @@ router.get('/oauth', (req, res) => {
         })
         .then(function (response) {
             // Get the JWT's sub value, which will represent the user ID
-            auth.verify(token.id_token)
+            auth.verify(token.id_token)  // token.id_token is the JWT
             .then(sub => {
-                const first_name = response.data.names[0].givenName;
-                const last_name = response.data.names[0].familyName;
-                const html = 
-                    "<html>" +
-                        "<head>" +
-                            "<title>OAuth 2.0 Implementation</title>" +
-                        "</head>" +
-                        "<body>" +
-                            "<h1>User Info</h1>" +
-                            "<ul>" +
-                                "<li>First Name: " + first_name + "</li>" +
-                                "<li>Last Name: " + last_name + "</li>" +
-                                "<li>User ID: " + sub + "</li>" +
-                                "<li>JWT: " + token.id_token + "</li>" +
-                            "</ul>" +
-                        "</body>" +
-                    "</html>";
+                const firstName = response.data.names[0].givenName;
+                const lastName = response.data.names[0].familyName;
+                const userData = {first_name: firstName, last_name: lastName, user_id: sub, JWT: token.id_token};
                 // Check if the user entity is already registered in the database
                 usersModel.get_user_with_user_id(sub)
                 .then(userWithUserId => {
                     if (userWithUserId[0] !== undefined) {
                         // User is already registered
-                        res.status(200).send(html);
+                        res.status(200).render('../views/user-info', {user:userData});
                     }
                     else {
-                        // User is not registered. Create the user entity
-                        usersModel.post_user(first_name, last_name, sub)
+                        // User is not registered. Create the user entity in Datastore
+                        usersModel.post_user(firstName, lastName, sub)
                         .then(key => { 
                             usersModel.get_user(key.id)
                             .then(() => {
-                                res.status(201).send(html);
+                                res.status(201).render('../views/user-info', {user:userData});
                             });
                         });
                     }
