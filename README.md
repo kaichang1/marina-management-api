@@ -12,11 +12,11 @@ For details about the API and all supported endpoints, view the API documentatio
 
 ### Unprotected Endpoints
 
-To interact with unprotected endpoints, simply send requests as described in the API Specifications.
+To interact with unprotected endpoints, simply send requests as described in the API Specification.
 
 ![Request](./public/images/example-request.jpg)
 
-An example request to create a load entity. The example uses Postman to send the request, although you are free to use another method.
+An example request to create a load entity. This example uses Postman to send the request, although you are free to use another method.
 
 ### Protected Endpoints
 
@@ -32,6 +32,6 @@ Save the JWT and send it in the Authorization Header as the value of a Bearer To
 
 ![Auth](./public/images/example-authorization-header.jpg)
 
-In the example above, the JWT is stored as an environment variable named `jwt1`. The Authorization Header type is set to "Bearer Token" with the token value set to the JWT.
+In the example using Postman above, the JWT is stored as an environment variable named `jwt1`. The Authorization Header type is set to "Bearer Token" with the token value set to the JWT.
 
 Note that JWTs expire. To obtain a new JWT, simply follow these instructions again.
